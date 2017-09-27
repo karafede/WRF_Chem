@@ -1,14 +1,14 @@
 &time_control
  start_year                          = 2017, 2017,2017
  start_month                         = 09, 09,09
- start_day                           = 24, 24,24
- start_hour                          = 06, 06,06
+ start_day                           = 27, 27,27
+ start_hour                          = 00, 00,00
  start_minute                        = 00,   00,   00,
  start_second                        = 00,   00,   00,
  end_year                            = 2017,2017,2017
  end_month                           = 09,09,09
- end_day                             = 27,27,27
- end_hour                            = 06,06,06
+ end_day                             = 30,30,30
+ end_hour                            = 00,00,00
  end_minute                          = 00,   00,   00,
  end_second                          = 00,   00,   00,
  interval_seconds                    = 21600,
