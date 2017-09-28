@@ -2,7 +2,7 @@
  input_from_file                     = .true.,.true.,.true.,
  fine_input_stream                   = 0, 0,
  history_interval                    = 60,   60,   60,
- frames_per_outfile                  = 24, 24, 120,
+ frames_per_outfile                  = 1, 1, 120,
  restart                             = .false.,
  restart_interval                    = 7200,
  io_form_history                     = 2
