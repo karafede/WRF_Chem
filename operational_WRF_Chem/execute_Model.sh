@@ -4,6 +4,7 @@
 #####################################################################################################################
 main=/home/fkaragulian/WRF_UAE/ ; scripts=$main/scripts/ ; wrf=$main/WRFV3/test/em_real/ ; wps=$main/WPS/ ; 
 input=$main/forcing_data/ ; date=$1 ; no_days=3
+#date=`date +%Y%m%d`06
 #####################################################################################################################
 cd ${wrf}/
 rm wrfbdy_d01 wrfinput_d0* met_em.d* rsl.* run.*.err run.*.out   
@@ -11,12 +12,12 @@ cd ${wps}/
 rm FILE* GRIBFILE* ungrib.log metgrid.log 
 
 #################################### download Data ###################################################################
-#mkdir -p ${input}/${date} ; cd ${input}/${date}/
+# mkdir -p ${input}/${date} ; cd ${input}/${date}/
 
-#for i in `seq -f %03.0f 0 6 72`; do
+# for i in `seq -f %03.0f 0 6 72`; do
 
-#wget -c  -t 200  -O gfs.t${date:8:2}z.pgrb2.0p25.f$i "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t${date:8:2}z.pgrb2.0p25.f$i&all_lev=on&all_var=on&subregion=&leftlon=20.00&rightlon=120.00&toplat=40.00&bottomlat=00.00&dir=%2Fgfs.${date}" 
-#done
+# wget -c  -t 200  -O gfs.t${date:8:2}z.pgrb2.0p25.f$i "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t${date:8:2}z.pgrb2.0p25.f$i&all_lev=on&all_var=on&subregion=&leftlon=20.00&rightlon=120.00&toplat=40.00&bottomlat=00.00&dir=%2Fgfs.${date}" 
+# done
 
 ######################################  Source Env variables ##########################################################
 export LC_LIBRARY_PATH=/apps/netcdf/installed/lib
@@ -216,14 +217,15 @@ export NCARG_ROOT=/apps/ncl/ncl-6.3.0/
 
 ############################################ Move WRF outputs files to CESAM  #############################################################################
 #dir=/research/cesam/AirQuality/WRF_outputs/
-#mkdir -p ${input}/${date} ; cd ${input}/${date}/
+#mkdir -p ${dir}/${date} ; cd ${input}/${date}/
 
+#cp wrfout_d0* /research/cesam/AirQuality/WRF_outputs/2017092800
+#mv wrfout_d0* /research/cesam/AirQuality/WRF_outputs/2017092800_WRF_out 
 
-#mv wrfout_d0* /research/cesam/AirQuality/WRF_outputs/2017092800 
 
 ########################################### Post Processing (to run for each output hour ##################################################################
 
-dir=/research/cesam/AirQuality/WRF_outputs/2017092800
+dir=/research/cesam/AirQuality/WRF_outputs/2017100100_WRF_output
 cd ${dir}/
 files=wrfout_d0*
  echo ${files}
