@@ -9,7 +9,14 @@ library(gstat)
 
 # list .nc files
 # 4km
-setwd("Z:/_SHARED_FOLDERS/Air Quality/Phase 2/Op_WRF_Chem/2017092800")
+setwd("/research/cesam/AirQuality/WRF_outputs/")
+dirs <- list.dirs()
+# get the most recent directory
+dirs <- sort(dirs, decreasing = T)
+
+folder_day <- str_sub(dirs[1], start = 3, end = -1)
+
+setwd(paste0("/research/cesam/AirQuality/WRF_outputs/", folder_day))
 
 filenames <- list.files(pattern = c("d02", ".nc"))
 filenames <- filenames
@@ -35,9 +42,8 @@ TS <- TS[1:5]
 
  # j = 1
 qq <- 0
- 
-  for(j in 1:length(filenames)) {
-    
+
+   for(j in 1:length(filenames)) {
      qq <- qq +1
      WRF_file <- open.nc(filenames[j])
      WRF_file <- read.nc(WRF_file)
@@ -73,7 +79,7 @@ qq <- 0
     MMM <-  t(PM10[ , ,1])   # map is upside down  (only consider surface level)
     MMM <- MMM[nrow(MMM):1, ]
     r <- raster(MMM, xmn, xmx, ymn,  ymx, crs="+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
-    plot(r)
+   # plot(r)
     writeRaster(r, paste0(DateTime,".tif") , options= "INTERLEAVE=BAND", overwrite=T)
    }
   
