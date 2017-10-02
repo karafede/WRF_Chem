@@ -11,7 +11,7 @@ export PATH=/apps/ncl/ncl-6.3.0/bin:${PATH}
 export NCARG_ROOT=/apps/ncl/ncl-6.3.0/
 #######################################################################################################################
 
-dir=/research/cesam/AirQuality/WRF_outputs/2017100100_WRF_output
+dir=/research/cesam/AirQuality/WRF_outputs/2017100100_WRF_out
 cd ${dir}/
 files=wrfout_d0*
  echo ${files}
