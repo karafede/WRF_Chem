@@ -25,7 +25,7 @@
  time_step                           = 60, 
  time_step_fract_num                 = 0,
  time_step_fract_den                 = 1,
- max_dom                             = 2,
+ max_dom                             = 1,
  e_we                                = 250, 250, 106,
  e_sn                                = 210, 172, 109,
  e_vert                              = 45, 45, 45,
