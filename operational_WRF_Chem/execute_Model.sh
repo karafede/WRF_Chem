@@ -3,8 +3,9 @@
 ##24/09/2017
 #####################################################################################################################
 main=/home/fkaragulian/WRF_UAE/ ; scripts=$main/scripts/ ; wrf=$main/WRFV3/test/em_real/ ; wps=$main/WPS/ ; 
-input=$main/forcing_data/ ; date=$1 ; no_days=3
-#date=`date +%Y%m%d`06
+input=$main/forcing_data/ ; date=$1 ; 
+no_days=3
+date=`date +%Y%m%d`00
 #####################################################################################################################
 cd ${wrf}/
 rm wrfbdy_d01 wrfinput_d0* met_em.d* rsl.* run.*.err run.*.out   
@@ -12,12 +13,12 @@ cd ${wps}/
 rm FILE* GRIBFILE* ungrib.log metgrid.log 
 
 #################################### download Data ###################################################################
-# mkdir -p ${input}/${date} ; cd ${input}/${date}/
+ mkdir -p ${input}/${date} ; cd ${input}/${date}/
 
-# for i in `seq -f %03.0f 0 6 72`; do
+ for i in `seq -f %03.0f 0 6 72`; do
 
-# wget -c  -t 200  -O gfs.t${date:8:2}z.pgrb2.0p25.f$i "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t${date:8:2}z.pgrb2.0p25.f$i&all_lev=on&all_var=on&subregion=&leftlon=20.00&rightlon=120.00&toplat=40.00&bottomlat=00.00&dir=%2Fgfs.${date}" 
-# done
+      wget -c  -t 200  -O gfs.t${date:8:2}z.pgrb2.0p25.f$i "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t${date:8:2}z.pgrb2.0p25.f$i&all_lev=on&all_var=on&subregion=&leftlon=20.00&rightlon=120.00&toplat=40.00&bottomlat=00.00&dir=%2Fgfs.${date}" 
+done
 
 ######################################  Source Env variables ##########################################################
 export LC_LIBRARY_PATH=/apps/netcdf/installed/lib
@@ -29,6 +30,13 @@ export PATH=/apps/cdo/cdo-1.7.2/bin:${PATH}
 module load ncview
 export PATH=/apps/ncl/ncl-6.3.0/bin:${PATH}
 export NCARG_ROOT=/apps/ncl/ncl-6.3.0/
+
+
+export LD_LIBRARY_PATH=/shared/ibm/platform_lsf/9.1/linux2.6-glibc2.3-x86_64/lib:$LD_LIBRARY_PATH
+export PATH=/shared/ibm/platform_lsf/9.1/linux2.6-glibc2.3-x86_64/bin:$PATH
+export LSF_ENVDIR=/shared/ibm/platform_lsf/conf
+export LSF_SERVERDIR=/shared/ibm/platform_lsf/9.1/linux2.6-glibc2.3-x86_64/etc
+
 
 ############################################Set up namelist ################################################################
 cd ${scripts}/namescripts/
@@ -90,7 +98,7 @@ echo WRF MET END""
 ############################################# WRF CHEM ########################################################################
 wrf_chem=/home/fkaragulian/WRFV3/test/em_real/ ; an_ems=/home/fkaragulian/ANTHRO/src ; wrf_met=/home/fkaragulian/ANTHRO/metFiles 
 db_ems=/home/fkaragulian/EDGAR-HTAP/MOZCART/   ; wes=/disk3/fkaragulian/WRFV3/wesely
-
+wrfout=/research/cesam/WRFChem_outputs/${date} ; mkdir -p ${wrfout}  
 ##############################################################################################################################
 
 cd ${wrf_chem}
@@ -186,6 +194,7 @@ cat << EOF >${scripts}/namescripts/namelist.input.chem
  end_hour                            = ${ed_date:11:2},${ed_date:11:2},${ed_date:11:2}
  end_minute                          = 00,   00,   00,
  end_second                          = 00,   00,   00,
+ history_outname                     = '${wrfout}/wrfout_d<domain>_<date>',
 EOF
 cat ${scripts}/namescripts/namelist.input.chem_tail >>${scripts}/namescripts/namelist.input.chem
 cp ${scripts}/namescripts/namelist.input.chem ${wrf_chem}
@@ -194,13 +203,11 @@ cd ${wrf_chem}
 
 ln -sf ${an_ems}/wrfchemi_*d0* . ; ln -sf ${wes}/exo_coldens_d0* . ; ln -sf ${wrf}/met_em.d* .
 
-bsub -I -n 96 -J chem-real -o run.%J.out -e run.%J.err -q normal mpirun ./real.exe
+bsub -I -n 2 -J chem-real -o run.%J.out -e run.%J.err -q normal mpirun ./real.exe
 
 bsub -I -n 96 -J chem-wrf -o vk.%J.out -e vk.%J.err -q normal mpirun ./wrf.exe
 
 echo "WRF Chem Ends"
-exit
-
 
 ######################################  Source Env variables ##########################################################
 export LC_LIBRARY_PATH=/apps/netcdf/installed/lib
@@ -213,19 +220,9 @@ module load ncview
 export PATH=/apps/ncl/ncl-6.3.0/bin:${PATH}
 export NCARG_ROOT=/apps/ncl/ncl-6.3.0/
 
-#######################################################################################################################
-
-############################################ Move WRF outputs files to CESAM  #############################################################################
-#dir=/research/cesam/AirQuality/WRF_outputs/
-#mkdir -p ${dir}/${date} ; cd ${input}/${date}/
-
-#cp wrfout_d0* /research/cesam/AirQuality/WRF_outputs/2017092800
-#mv wrfout_d0* /research/cesam/AirQuality/WRF_outputs/2017092800_WRF_out 
-
-
 ########################################### Post Processing (to run for each output hour ##################################################################
 
-dir=/research/cesam/AirQuality/WRF_outputs/2017100100_WRF_output
+dir=${wrfout}
 cd ${dir}/
 files=wrfout_d0*
  echo ${files}
@@ -234,15 +231,13 @@ for i in ${files[@]}; do
  #echo file_in is $i 
  #echo file_out is $output 
  #ncl 'file_in="'$i'"' 'file_out="./'$output'.nc"' ./wrfpost_dust_20170927_airquality.ncl
- ncl 'file_in="'$i'"' 'file_out="./'$output'.nc"' /home/fkaragulian/bin/wrfpost_dust_20170927_airquality.ncl
+ # ncl 'file_in="'$i'"' 'file_out="./'$output'.nc"' /home/fkaragulian/bin/wrfpost_dust_20170927_airquality.ncl
+ ncl 'file_in="'$i'"' 'file_out="./'$output'.nc"' /home/fkaragulian/WRF_UAE/scripts/wrfpost_dust_20170927_airquality.ncl
  done
-
-
+rm -rf ${wrfout}/wrfout_d0* 
 
 ########################################## R scripts to generate .TIFF Files ################################################################################
 
-
-
-
+/apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/nc_WRFChem_post_proc_d01.R ${date}
 
 
