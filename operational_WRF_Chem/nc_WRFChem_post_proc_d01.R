@@ -46,7 +46,7 @@ folder_day <- date
 # suffix <- str_sub(folder_day, start =9 , end = -1)
 
 # date=Sys.arg[1]
-folder_day <- "2017100500"
+# folder_day <- "2017100500"
 # year <- "2017"
 # month <- "10"
 # day <- "01"

@@ -15,10 +15,10 @@ rm FILE* GRIBFILE* ungrib.log metgrid.log
 #################################### download Data ###################################################################
  mkdir -p ${input}/${date} ; cd ${input}/${date}/
 
- for i in `seq -f %03.0f 0 6 72`; do
+# for i in `seq -f %03.0f 0 6 72`; do
 
-      wget -c  -t 200  -O gfs.t${date:8:2}z.pgrb2.0p25.f$i "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t${date:8:2}z.pgrb2.0p25.f$i&all_lev=on&all_var=on&subregion=&leftlon=20.00&rightlon=120.00&toplat=40.00&bottomlat=00.00&dir=%2Fgfs.${date}" 
-done
+#      wget -c  -t 200  -O gfs.t${date:8:2}z.pgrb2.0p25.f$i "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t${date:8:2}z.pgrb2.0p25.f$i&all_lev=on&all_var=on&subregion=&leftlon=20.00&rightlon=120.00&toplat=40.00&bottomlat=00.00&dir=%2Fgfs.${date}" 
+#done
 
 ######################################  Source Env variables ##########################################################
 export LC_LIBRARY_PATH=/apps/netcdf/installed/lib
@@ -90,7 +90,8 @@ echo WPS END""
 ############################################# WRF#############################################################################
 cd ${wrf}
 echo "WRF MET STARTS"
-bsub -I -n 6 -J job_name -o run.%J.out -e run.%J.err -q normal mpirun ./real.exe
+# bsub -I -n 6 -J job_name -o run.%J.out -e run.%J.err -q normal mpirun ./real.exe
+bsub -I -n 96 -q general -W 15 -J example -o example.%J.out -e example.J.err "mpirun ./real.exe"
 
 #bsub -n 60 -J job_name -o vk.%J.out -e vk.%J.err -q normal mpirun ./wrf.exe
 echo WRF MET END""
@@ -203,9 +204,11 @@ cd ${wrf_chem}
 
 ln -sf ${an_ems}/wrfchemi_*d0* . ; ln -sf ${wes}/exo_coldens_d0* . ; ln -sf ${wrf}/met_em.d* .
 
-bsub -I -n 2 -J chem-real -o run.%J.out -e run.%J.err -q normal mpirun ./real.exe
+# bsub -I -n 2 -J chem-real -o run.%J.out -e run.%J.err -q normal mpirun ./real.exe
+bsub -I -n 2 -q general -W 20 -J example -o example.%J.out -e example.J.err "mpirun ./real.exe"
 
-bsub -I -n 96 -J chem-wrf -o vk.%J.out -e vk.%J.err -q normal mpirun ./wrf.exe
+# bsub -I -n 96 -J chem-wrf -o vk.%J.out -e vk.%J.err -q normal mpirun ./wrf.exe
+bsub -I -n 96 -q general -W 600 -J example -o example.%J.out -e example.J.err "mpirun ./wrf.exe"
 
 echo "WRF Chem Ends"
 
