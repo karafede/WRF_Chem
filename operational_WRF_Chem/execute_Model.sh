@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/bin/bash -i
 ## script for automating WRF model
 ##24/09/2017
+
 #####################################################################################################################
 main=/home/fkaragulian/WRF_UAE/ ; scripts=$main/scripts/ ; wrf=$main/WRFV3/test/em_real/ ; wps=$main/WPS/ ; 
 input=$main/forcing_data/ ; date=$1 ; 
@@ -15,19 +16,23 @@ rm FILE* GRIBFILE* ungrib.log metgrid.log
 #################################### download Data ###################################################################
  mkdir -p ${input}/${date} ; cd ${input}/${date}/
 
-# for i in `seq -f %03.0f 0 6 72`; do
+ for i in `seq -f %03.0f 0 6 72`; do
 
-#      wget -c  -t 200  -O gfs.t${date:8:2}z.pgrb2.0p25.f$i "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t${date:8:2}z.pgrb2.0p25.f$i&all_lev=on&all_var=on&subregion=&leftlon=20.00&rightlon=120.00&toplat=40.00&bottomlat=00.00&dir=%2Fgfs.${date}" 
-#done
+      wget -c  -t 200  -O gfs.t${date:8:2}z.pgrb2.0p25.f$i "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t${date:8:2}z.pgrb2.0p25.f$i&all_lev=on&all_var=on&subregion=&leftlon=20.00&rightlon=120.00&toplat=40.00&bottomlat=00.00&dir=%2Fgfs.${date}" 
+done
 
 ######################################  Source Env variables ##########################################################
+
+module() { eval `/usr/bin/modulecmd $modules_shell $*`; }
+module bash load /usr/share/Modules/modulefiles/PMPI/modulefile /apps/mi-env/modules/gcc/4.9.2 /apps/mi-env/modules/openmpi/1.8.4 /apps/mi-env/modules/ncview/2.1.7
+
 export LC_LIBRARY_PATH=/apps/netcdf/installed/lib
-module load gcc/4.9.2
-module load openmpi/1.8.4
+# module load gcc/4.9.2
+# module load openmpi/1.8.4
 export LC_LIBRARY_PATH=/apps/libpng/libpng-1.4.13/lib:${LD_LIBRARY_PATH}
 source "/home/fkaragulian/WRFV3/wrfchem_env.txt"  
 export PATH=/apps/cdo/cdo-1.7.2/bin:${PATH}
-module load ncview
+# module load ncview
 export PATH=/apps/ncl/ncl-6.3.0/bin:${PATH}
 export NCARG_ROOT=/apps/ncl/ncl-6.3.0/
 
@@ -213,15 +218,25 @@ bsub -I -n 96 -q general -W 600 -J example -o example.%J.out -e example.J.err "m
 echo "WRF Chem Ends"
 
 ######################################  Source Env variables ##########################################################
+
+module() { eval `/usr/bin/modulecmd $modules_shell $*`; }
+module bash load /usr/share/Modules/modulefiles/PMPI/modulefile /apps/mi-env/modules/gcc/4.9.2 /apps/mi-env/modules/openmpi/1.8.4 /apps/mi-env/modules/ncview/2.1.7
+ 
 export LC_LIBRARY_PATH=/apps/netcdf/installed/lib
-module load gcc/4.9.2
-module load openmpi/1.8.4
+# module load gcc/4.9.2
+# module load openmpi/1.8.4
 export LC_LIBRARY_PATH=/apps/libpng/libpng-1.4.13/lib:${LD_LIBRARY_PATH}
 source "/home/fkaragulian/WRFV3/wrfchem_env.txt"  
 export PATH=/apps/cdo/cdo-1.7.2/bin:${PATH}
-module load ncview
+# module load ncview
 export PATH=/apps/ncl/ncl-6.3.0/bin:${PATH}
 export NCARG_ROOT=/apps/ncl/ncl-6.3.0/
+
+
+export LD_LIBRARY_PATH=/shared/ibm/platform_lsf/9.1/linux2.6-glibc2.3-x86_64/lib:$LD_LIBRARY_PATH
+export PATH=/shared/ibm/platform_lsf/9.1/linux2.6-glibc2.3-x86_64/bin:$PATH
+export LSF_ENVDIR=/shared/ibm/platform_lsf/conf
+export LSF_SERVERDIR=/shared/ibm/platform_lsf/9.1/linux2.6-glibc2.3-x86_64/etc
 
 ########################################### Post Processing (to run for each output hour ##################################################################
 
@@ -242,5 +257,7 @@ rm -rf ${wrfout}/wrfout_d0*
 ########################################## R scripts to generate .TIFF Files ################################################################################
 
 /apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/nc_WRFChem_post_proc_d01.R ${date}
+
+rsync -avz ${wrfout}/PM10/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/ 
 
 
