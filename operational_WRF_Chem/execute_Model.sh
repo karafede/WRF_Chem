@@ -21,7 +21,7 @@ rm FILE* GRIBFILE* ungrib.log metgrid.log
  for i in `seq -f %03.0f 0 6 72`; do
 
       wget -c  -t 200  -O gfs.t${date:8:2}z.pgrb2.0p25.f$i "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t${date:8:2}z.pgrb2.0p25.f$i&all_lev=on&all_var=on&subregion=&leftlon=20.00&rightlon=120.00&toplat=40.00&bottomlat=00.00&dir=%2Fgfs.${date}" 
-done
+ done
 
 ######################################  Source Env variables ##########################################################
 
@@ -217,7 +217,12 @@ bsub -I -n 2 -q general -W 20 -J example -o example.%J.out -e example.J.err "mpi
 # bsub -I -n 96 -J chem-wrf -o vk.%J.out -e vk.%J.err -q normal mpirun ./wrf.exe
 bsub -I -n 96 -q general -W 600 -J example -o example.%J.out -e example.J.err "mpirun ./wrf.exe"
 
-echo "WRF Chem Ends"
+if [ `grep -c SUCCESS rsl.out.0000` -lt 1 ]; then
+         echo WRF Chem failed for ${date}
+         /usr/bin/python ${scripts}/sendMail.py "WRF Chem Run failed:$date" 
+else
+	echo "WRF Chem Ends"
+fi
 
 ######################################  Source Env variables ##########################################################
 
