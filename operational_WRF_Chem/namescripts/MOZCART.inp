@@ -1,0 +1,20 @@
+&CONTROL
+ anthro_dir = '/home/fkaragulian/EDGAR-HTAP/MOZCART/'
+ wrf_dir    = '/home/fkaragulian/ANTHRO/metFiles'
+ src_file_prefix = 'EDGAR_HTAP_emi_'
+ src_file_suffix = '_2010.0.1x0.1.nc'
+ src_names = 'CO(28)','NOx(30)','SO2(64)','NH3(17)','BC(12)','OC(12)','PM2.5(1)','PM10(1)',
+             'BIGALK(72)','BIGENE(56)','C2H4(28)','C2H5OH(46)','C2H6(30)','CH2O(30)',
+             'CH3CHO(44)','CH3COCH3(58)','CH3OH(32)','MEK(72)','TOLUENE(92)','C3H6(42)','C3H8(44)'
+ sub_categories  = 'emis_tot'
+ cat_var_prefix  = ' '
+ serial_output   = .false.
+ start_output_time = '2010-11-13_00:00:00'
+ stop_output_time  = '2010-11-16_00:00:00'
+ emissions_zdim_stag = 10
+ emis_map = 'CO->CO','NO->NOx','SO2->SO2','NH3->NH3','BC(a)->BC','OC(a)->OC','PM_25(a)->PM2.5','PM_10(a)->PM10',
+            'BIGALK->BIGALK','BIGENE->BIGENE','C2H4->C2H4','C2H5OH->C2H5OH','C2H6->C2H6',
+            'CH2O->CH2O','CH3CHO->CH3CHO','CH3COCH3->CH3COCH3','CH3OH->CH3OH','MEK->MEK',
+            'TOLUENE->TOLUENE','C3H6->C3H6','C3H8->C3H8','NO2->0.0*NOx','ISOP->0.0*CO',
+            'C10H16->0.0*CO','SULF->0.0*SO2'
+/
