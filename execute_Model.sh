@@ -2,6 +2,8 @@
 ## script for automating WRF model
 ##24/09/2017
 
+source /home/fkaragulian/export.sh
+
 #####################################################################################################################
 main=/home/fkaragulian/WRF_UAE/ ; scripts=$main/scripts/ ; wrf=$main/WRFV3/test/em_real/ ; wps=$main/WPS/ ; 
 input=$main/forcing_data/ ; date=$1 ; 
@@ -19,7 +21,7 @@ rm FILE* GRIBFILE* ungrib.log metgrid.log
  for i in `seq -f %03.0f 0 6 72`; do
 
       wget -c  -t 200  -O gfs.t${date:8:2}z.pgrb2.0p25.f$i "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t${date:8:2}z.pgrb2.0p25.f$i&all_lev=on&all_var=on&subregion=&leftlon=20.00&rightlon=120.00&toplat=40.00&bottomlat=00.00&dir=%2Fgfs.${date}" 
-done
+ done
 
 ######################################  Source Env variables ##########################################################
 
@@ -215,7 +217,12 @@ bsub -I -n 2 -q general -W 20 -J example -o example.%J.out -e example.J.err "mpi
 # bsub -I -n 96 -J chem-wrf -o vk.%J.out -e vk.%J.err -q normal mpirun ./wrf.exe
 bsub -I -n 96 -q general -W 600 -J example -o example.%J.out -e example.J.err "mpirun ./wrf.exe"
 
-echo "WRF Chem Ends"
+if [ `grep -c SUCCESS rsl.out.0000` -lt 1 ]; then
+         echo WRF Chem failed for ${date}
+         /usr/bin/python ${scripts}/sendMail.py "WRF Chem Run failed:$date" 
+else
+	echo "WRF Chem Ends"
+fi
 
 ######################################  Source Env variables ##########################################################
 
@@ -254,10 +261,17 @@ for i in ${files[@]}; do
  done
 rm -rf ${wrfout}/wrfout_d0* 
 
+
 ########################################## R scripts to generate .TIFF Files ################################################################################
 
 /apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/nc_WRFChem_post_proc_d01.R ${date}
 
-rsync -avz ${wrfout}/PM10/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/ 
+rsync -avz ${wrfout}/PM10/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/PM10 
+rsync -avz ${wrfout}/PM25/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/PM25 
+rsync -avz ${wrfout}/NO2/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/NO2 
+rsync -avz ${wrfout}/SO2/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/SO2 
+rsync -avz ${wrfout}/CO/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/CO 
+rsync -avz ${wrfout}/O3/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/O3
 
+rm -rf ${wrfout}/wrfpost_d0*  
 
