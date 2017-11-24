@@ -1,0 +1,37 @@
+&share
+wrf_core = 'ARW',
+max_dom = 2,
+start_date = '2017-11-23_00:00:00','2017-11-23_00:00:00',
+end_date   = '2017-11-26_00:00:00','2017-11-26_00:00:00'
+interval_seconds = 21600
+io_form_geogrid = 2,
+/
+&geogrid
+ parent_id         =   1,1,2,
+ parent_grid_ratio =   1,3,3,
+ i_parent_start    =   31, 75,31,95,
+ j_parent_start    =   40, 80,40,90,
+ e_we              =   250,250,127,106,
+ e_sn              =   210,172,142,109,
+ geog_data_res     = '30s','30s', '30s'
+ dx = 12000,
+ dy = 12000,
+ map_proj =  'lambert',
+ ref_lat   =  24,
+ ref_lon   = 54,
+ truelat1  = 24,
+ truelat2  = 24,
+ stand_lon = 54,
+ geog_data_path = '/home/fkaragulian/WRF_UAE/geog/'
+/
+
+&ungrib
+ out_format = 'WPS',
+ prefix = 'FILE',
+/
+
+&metgrid
+ opt_output_from_metgrid_path='/home/fkaragulian/WRF_UAE/WRFV3/test/em_real/'
+ fg_name = 'FILE'
+ io_form_metgrid = 2, 
+/
