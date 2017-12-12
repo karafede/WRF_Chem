@@ -139,8 +139,8 @@ cat <<EOF > ${an_ems}/MOZCART.inp
  sub_categories  = 'emis_tot'
  cat_var_prefix  = ' '
  serial_output   = .false.
- start_output_time = '2010-${date:4:2}-${date:6:2}_${date:8:2}:00:00'
- stop_output_time  = '2010-${ed_date:5:2}-${ed_date:8:2}_${ed_date:11:2}:00:00'
+ start_output_time = '2010-${date:4:2}-01_${date:8:2}:00:00'
+ stop_output_time  = '2010-${date:4:2}-04_${date:8:2}:00:00' 
  emissions_zdim_stag = 10
  emis_map = 'CO->CO','NO->NOx','SO2->SO2','NH3->NH3','BC(a)->BC','OC(a)->OC','PM_25(a)->PM2.5','PM_10(a)->PM10',
             'BIGALK->BIGALK','BIGENE->BIGENE','C2H4->C2H4','C2H5OH->C2H5OH','C2H6->C2H6',
@@ -150,11 +150,17 @@ cat <<EOF > ${an_ems}/MOZCART.inp
 /
 EOF
 
+
+
+# start_output_time = '2010-${date:4:2}-${date:6:2}_${date:8:2}:00:00'
+# stop_output_time  = '2010-${ed_date:5:2}-${ed_date:8:2}_${ed_date:11:2}:00:00'
+
 ############################################# Domain 01 #######################################################################################
 ##bsub -I -n 1 -J job_name -o run.%J.out -e run.%J.err -q normal ./anthro_emis < MOZCART.inp > MOZCART_FK.out
+
 ./anthro_emis < MOZCART.inp > MOZCART_FK.out
 
-mv wrfchemi_00z_d01 wrfchemi_00z_d01_coarse ; mv wrfchemi_12z_d01 wrfchemi_12z_d01_coarse
+ mv wrfchemi_00z_d01 wrfchemi_00z_d01_coarse ; mv wrfchemi_12z_d01 wrfchemi_12z_d01_coarse
 
 cd ${wes}
 cat << EOF >${wes}/namelist.input
@@ -170,13 +176,13 @@ mv exo_coldens_d01 exo_coldens_d01_coarse
 
 ########################### Domain 02 ############################################################################################################
 cd ${wrf_met}
-cp ${wrf}/wrfinput_d02 wrfinput_d01 ; cp namelist.input_d02 namelist.input
+ cp ${wrf}/wrfinput_d02 wrfinput_d01 ; cp namelist.input_d02 namelist.input
 
 cd ${an_ems}
-./anthro_emis < MOZCART.inp > MOZCART_FK.out
+ ./anthro_emis < MOZCART.inp > MOZCART_FK.out
 
-mv wrfchemi_00z_d01 wrfchemi_00z_d02 ; mv wrfchemi_12z_d01 wrfchemi_12z_d02
-mv wrfchemi_00z_d01_coarse wrfchemi_00z_d01 ; mv wrfchemi_12z_d01_coarse wrfchemi_12z_d01
+ mv wrfchemi_00z_d01 wrfchemi_00z_d02 ; mv wrfchemi_12z_d01 wrfchemi_12z_d02
+ mv wrfchemi_00z_d01_coarse wrfchemi_00z_d01 ; mv wrfchemi_12z_d01_coarse wrfchemi_12z_d01
 
 cd ${wes}
 ./exo_coldens < namelist.input
@@ -259,7 +265,9 @@ for i in ${files[@]}; do
  # ncl 'file_in="'$i'"' 'file_out="./'$output'.nc"' /home/fkaragulian/bin/wrfpost_dust_20170927_airquality.ncl
  ncl 'file_in="'$i'"' 'file_out="./'$output'.nc"' /home/fkaragulian/WRF_UAE/scripts/wrfpost_dust_20170927_airquality.ncl
  done
+
 rm -rf ${wrfout}/wrfout_d0* 
+
 
 ########################################## R scripts to generate .TIFF Files ################################################################################
 
@@ -272,4 +280,15 @@ rsync -avz ${wrfout}/SO2/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scrip
 rsync -avz ${wrfout}/CO/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/CO 
 rsync -avz ${wrfout}/O3/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/O3
 
+
+rsync -avz ${wrfout}/PM10/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/PM10 
+rsync -avz ${wrfout}/PM25/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/PM25 
+rsync -avz ${wrfout}/NO2/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/NO2 
+rsync -avz ${wrfout}/SO2/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/SO2 
+rsync -avz ${wrfout}/CO/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/CO 
+rsync -avz ${wrfout}/O3/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/O3
+
+/home/pvernier/scripts_cron/forecast_wrf_chem/
+
+# rm -rf ${wrfout}/wrfpost_d0*  
 
