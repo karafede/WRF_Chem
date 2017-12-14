@@ -1,0 +1,33 @@
+Sender: LSF System <phpcadmin@hpc048>
+Subject: Job 319616: <WRF_Chm_Post> in cluster <phpc_cluster> Exited
+
+Job <WRF_Chm_Post> was submitted from host <sub3> by user <fkaragulian> in cluster <phpc_cluster>.
+Job was executed on host(s) <hpc048>, in queue <general>, as user <fkaragulian> in cluster <phpc_cluster>.
+</home/fkaragulian> was used as the home directory.
+</disk3/fkaragulian/WRF_UAE/scripts> was used as the working directory.
+Started at Thu Dec 14 16:08:00 2017
+Results reported on Thu Dec 14 16:08:00 2017
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/disk3/fkaragulian/WRF_UAE/scripts/POSTPROCESSING.sh
+------------------------------------------------------------
+
+Exited with exit code 126.
+
+Resource usage summary:
+
+    CPU time :                                   0.01 sec.
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+
+The output (if any) follows:
+
+
+
+PS:
+
+Read file <WRF_Chm_Post.319616.err> for stderr output of this job.
+

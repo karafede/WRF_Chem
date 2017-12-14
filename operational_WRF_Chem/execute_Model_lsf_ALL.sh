@@ -98,7 +98,8 @@ echo WPS END""
 cd ${wrf}
 echo "WRF MET STARTS"
 # bsub -I -n 6 -J job_name -o run.%J.out -e run.%J.err -q normal mpirun ./real.exe
-bsub -K -n 96 -q general -W 45 -J example -o example.%J.out -e example.J.err "mpirun ./real.exe"
+#bsub -K -n 96 -q general -W 45 -J example -o example.%J.out -e example.J.err "mpirun ./real.exe"
+mpirun -n 96 ./real.exe
 
 #bsub -n 60 -J job_name -o vk.%J.out -e vk.%J.err -q normal mpirun ./wrf.exe
 echo WRF MET END""
@@ -218,10 +219,12 @@ cd ${wrf_chem}
 ln -sf ${an_ems}/wrfchemi_*d0* . ; ln -sf ${wes}/exo_coldens_d0* . ; ln -sf ${wrf}/met_em.d* .
 
 # bsub -I -n 2 -J chem-real -o run.%J.out -e run.%J.err -q normal mpirun ./real.exe
-bsub -K -n 2 -q general -W 20 -J example -o example.%J.out -e example.J.err "mpirun ./real.exe"
+#bsub -K -n 2 -q general -W 20 -J example -o example.%J.out -e example.J.err "mpirun ./real.exe"
+mpirun -n 2 ./real.exe
 
 # bsub -I -n 96 -J chem-wrf -o vk.%J.out -e vk.%J.err -q normal mpirun ./wrf.exe
-bsub -K -n 96 -q general -W 600 -J example -o example.%J.out -e example.J.err "mpirun ./wrf.exe"
+#bsub -K -n 96 -q general -W 600 -J example -o example.%J.out -e example.J.err "mpirun ./wrf.exe"
+mpirun -n 96 ./wrf.exe
 
 if [ `grep -c SUCCESS rsl.out.0000` -lt 1 ]; then
          echo WRF Chem failed for ${date}

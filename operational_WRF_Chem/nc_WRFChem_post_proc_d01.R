@@ -39,7 +39,7 @@ time <- Sys.time()
 year <- year <- str_sub(time, start = 0, end = -16)
 month <- str_sub(time, start = 6, end = -13)
 day <- str_sub(time, start = 9, end = -10) 
-# folder_day <- paste0(year,month, day,"00")    # "2017100200"
+# folder_day <- paste0(year,month, day,"00")    # "2017120400"
 
 
 folder_day <- date
