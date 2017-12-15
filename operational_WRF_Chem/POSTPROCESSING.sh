@@ -32,6 +32,8 @@ export LSF_SERVERDIR=/shared/ibm/platform_lsf/9.1/linux2.6-glibc2.3-x86_64/etc
 
 ########################################### Post Processing (to run for each output hour ##################################################################
 
+wrfout=/research/cesam/WRFChem_outputs/${date} 
+
 dir=${wrfout}
 cd ${dir}/
 files=wrfout_d0*
@@ -45,7 +47,7 @@ for i in ${files[@]}; do
  ncl 'file_in="'$i'"' 'file_out="./'$output'.nc"' /home/fkaragulian/WRF_UAE/scripts/wrfpost_dust_20170927_airquality.ncl
  done
 
-#rm -rf ${wrfout}/wrfout_d0* 
+rm -rf ${wrfout}/wrfout_d0* 
 
 
 ########################################## R scripts to generate .TIFF Files ################################################################################
