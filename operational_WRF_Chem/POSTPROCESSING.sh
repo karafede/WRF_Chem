@@ -69,6 +69,6 @@ rsync -avz ${wrfout}/SO2/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron
 rsync -avz ${wrfout}/CO/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/CO 
 rsync -avz ${wrfout}/O3/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/O3
 
-/home/pvernier/scripts_cron/forecast_wrf_chem/
+# /home/pvernier/scripts_cron/forecast_wrf_chem/
 
 #rm -rf ${wrfout}/wrfpost_d0*  
