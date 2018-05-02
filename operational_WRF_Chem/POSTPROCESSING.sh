@@ -61,7 +61,6 @@ rsync -avz ${wrfout}/SO2/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scrip
 rsync -avz ${wrfout}/CO/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/CO 
 rsync -avz ${wrfout}/O3/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/O3
 
-
 rsync -avz ${wrfout}/PM10/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/PM10 
 rsync -avz ${wrfout}/PM25/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/PM25 
 rsync -avz ${wrfout}/NO2/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/NO2 
@@ -69,6 +68,9 @@ rsync -avz ${wrfout}/SO2/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron
 rsync -avz ${wrfout}/CO/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/CO 
 rsync -avz ${wrfout}/O3/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/O3
 
+/apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/AQI_WRFChem_HPC.R ${date}
+rsync -avz ${wrfout}/AQI/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/AQI
 # /home/pvernier/scripts_cron/forecast_wrf_chem/
 
-#rm -rf ${wrfout}/wrfpost_d0*  
+rm -rf ${wrfout}/wrfpost_d0*  
+

@@ -12,7 +12,9 @@ cd /disk3/fkaragulian/WRF_UAE/scripts/
 # bsub -n 96 -K -R "span[ptile=24]" -W 6:00 -q general -J WRF_Chm -o WRF_Chm.%J.out -e WRF_Chm.%J.err "/disk3/fkaragulian/WRF_UAE/scripts/execute_Model_lsf.sh 1>/home/fkaragulian/log/chemrun.log 2>/home/fkaragulian/log/chem-error.log"
 
 # reserved nodes
-bsub -n 96 -K -U wrf_chem_00z -R "span[ptile=24]" -W 6:00 -q general -J WRF_Chm -o WRF_Chm.%J.out -e WRF_Chm.%J.err "/disk3/fkaragulian/WRF_UAE/scripts/execute_Model_lsf.sh 1>/home/fkaragulian/log/chemrun.log 2>/home/fkaragulian/log/chem-error.log"
+# bsub -n 96 -K -U wrf_chem_00z -R "span[ptile=24]" -W 6:00 -q general -J WRF_Chm -o WRF_Chm.%J.out -e WRF_Chm.%J.err "/disk3/fkaragulian/WRF_UAE/scripts/execute_Model_lsf.sh 1>/home/fkaragulian/log/chemrun.log 2>/home/fkaragulian/log/chem-error.log"
+bsub -n 96 -K -R "span[ptile=24]" -W 6:00 -q high -J WRF_Chm -o WRF_Chm.%J.out -e WRF_Chm.%J.err "/disk3/fkaragulian/WRF_UAE/scripts/execute_Model_lsf.sh 1>/home/fkaragulian/log/chemrun.log 2>/home/fkaragulian/log/chem-error.log"
+
 
 #Post-processing (with NCL and R)
 bsub   -W 2:00 -q general -J WRF_Chm_Post -o WRF_Chm_Post.%J.out -e WRF_Chm_Post.%J.err /disk3/fkaragulian/WRF_UAE/scripts/POSTPROCESSING.sh

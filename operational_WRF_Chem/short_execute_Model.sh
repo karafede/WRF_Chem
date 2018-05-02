@@ -35,24 +35,25 @@ wrfout=/research/cesam/WRFChem_outputs/${date}
 
 dir=${wrfout}
 cd ${dir}/
-# files=wrfout_d0*
-# echo ${files}
-# for i in ${files[@]}; do
-# output=( `echo ${i##*/}|sed 's/wrfout/wrfpost/'`  )
-# ncl 'file_in="'$i'"' 'file_out="./'$output'.nc"' /home/fkaragulian/WRF_UAE/scripts/wrfpost_dust_20170927_airquality.ncl
-# done
+files=wrfout_d0*
+echo ${files}
+for i in ${files[@]}; do
+output=( `echo ${i##*/}|sed 's/wrfout/wrfpost/'`  )
+ncl 'file_in="'$i'"' 'file_out="./'$output'.nc"' /home/fkaragulian/WRF_UAE/scripts/wrfpost_dust_20170927_airquality.ncl
+done
 # rm -rf ${wrfout}/wrfout_d0* 
+
 
 ########################################## R scripts to generate .TIFF Files ################################################################################
 
-# /apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/nc_WRFChem_post_proc_d01.R ${date}
+/apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/nc_WRFChem_post_proc_d01.R ${date}
 
-# rsync -avz ${wrfout}/PM10/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/PM10 
-# rsync -avz ${wrfout}/PM25/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/PM25 
-# rsync -avz ${wrfout}/NO2/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/NO2 
-# rsync -avz ${wrfout}/SO2/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/SO2 
-# rsync -avz ${wrfout}/CO/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/CO 
-# rsync -avz ${wrfout}/O3/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/O3
+rsync -avz ${wrfout}/PM10/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/PM10 
+rsync -avz ${wrfout}/PM25/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/PM25 
+rsync -avz ${wrfout}/NO2/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/NO2 
+rsync -avz ${wrfout}/SO2/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/SO2 
+rsync -avz ${wrfout}/CO/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/CO 
+rsync -avz ${wrfout}/O3/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/O3
 
 rsync -avz ${wrfout}/PM10/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/PM10 
 rsync -avz ${wrfout}/PM25/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/PM25 
