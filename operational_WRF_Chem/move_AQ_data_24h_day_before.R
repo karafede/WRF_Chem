@@ -12,14 +12,16 @@ library(ncdf4)
 library(gstat)
 
 
-date <- commandArgs(trailingOnly = TRUE)
-date
+data <- commandArgs(trailingOnly = TRUE)
 
-date_yesterday <- commandArgs(trailingOnly = TRUE)
-date_yesterday
+date <- data[1]
+date_yesterday <- data[2]
 
-# date_yesterday <- "2018050300"
-# date <- "2018050400"
+# date_yesterday <- commandArgs(trailingOnly = TRUE)
+# date_yesterday
+
+# date_yesterday <- "2018051300"
+# date <- "2018051400"
 
 yesterday_folder_O3 <- paste0("/research/cesam/WRFChem_outputs/", date_yesterday,"/O3")
 yesterday_folder_CO <- paste0("/research/cesam/WRFChem_outputs/", date_yesterday,"/CO")

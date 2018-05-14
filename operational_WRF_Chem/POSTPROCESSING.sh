@@ -56,9 +56,10 @@ rm -rf ${wrfout}/wrfout_d0*
 ########################################## R scripts to generate .TIFF Files ################################################################################
 
 /apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/nc_WRFChem_post_proc_d01.R ${date}
-# to process AQI data
+
 # copy first 24h data from the previous day
 /apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/move_AQ_data_24h_day_before.R ${date} ${date_yesterday} 
+# process AQI data
 /apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/AQI_WRFChem_HPC.R ${date}
 
 rsync -avz ${wrfout}/PM10/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/PM10 
@@ -86,5 +87,5 @@ rsync -avz ${wrfout}/AQI/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scrip
 rsync -avz ${wrfout}/AQI/*.tif fkaragulian@cesam-web-prod:/data/scripts_cron/forecast_wrf_chem/AQI
 # /home/pvernier/scripts_cron/forecast_wrf_chem/
 
-# rm -rf ${wrfout}/wrfpost_d0*  
+rm -rf ${wrfout}/wrfpost_d0*  
 
