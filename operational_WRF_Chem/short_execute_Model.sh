@@ -35,12 +35,14 @@ wrfout=/research/cesam/WRFChem_outputs/${date}
 
 dir=${wrfout}
 cd ${dir}/
-files=wrfout_d0*
-echo ${files}
-for i in ${files[@]}; do
-output=( `echo ${i##*/}|sed 's/wrfout/wrfpost/'`  )
-ncl 'file_in="'$i'"' 'file_out="./'$output'.nc"' /home/fkaragulian/WRF_UAE/scripts/wrfpost_dust_20170927_airquality.ncl
-done
+
+# files=wrfout_d0*
+# echo ${files}
+# for i in ${files[@]}; do
+# output=( `echo ${i##*/}|sed 's/wrfout/wrfpost/'`  )
+# ncl 'file_in="'$i'"' 'file_out="./'$output'.nc"' /home/fkaragulian/WRF_UAE/scripts/wrfpost_dust_20170927_airquality.ncl
+# done
+
 # rm -rf ${wrfout}/wrfout_d0* 
 
 
@@ -61,3 +63,6 @@ rsync -avz ${wrfout}/NO2/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron
 rsync -avz ${wrfout}/SO2/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/SO2 
 rsync -avz ${wrfout}/CO/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/CO 
 rsync -avz ${wrfout}/O3/*.tif fkaragulian@cesam-uat:/home/pvernier/scripts_cron/forecast_wrf_chem/O3
+
+/apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/AQI_WRFChem_HPC.R ${date}
+rsync -avz ${wrfout}/AQI/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/AQI
