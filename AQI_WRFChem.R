@@ -244,6 +244,10 @@ plot(r)
 writeRaster(r, paste0(output_dir,"/",DateTime, "_AQI.tif") , options= "INTERLEAVE=BAND", overwrite=T)
 
 
+#######################################################
+# generate .csv files for AQI with unhealthy values ###
+#######################################################
+
 crs <- projection(shp_buff) ### get projections from shp file
 # make a spatial object with each AQI
 AQI <- SpatialPointsDataFrame(AQI[,1:2], AQI, 
@@ -255,7 +259,7 @@ pts_in_buffer_ID <- over(AQI, shp_buff[, "ID"])
 pts_in_buffer_ID <- na.omit(pts_in_buffer_ID)
 
 
-library(spatialEco)
+# library(spatialEco)
 # find points inside the buffer
 # pts_in_buffer <- point.in.poly(values, shp_buff)
 pts_in_buffer <- AQI[shp_buff,] 
@@ -282,36 +286,57 @@ data_points <- data_points[!is.na(data_points$AVERAGE_AQI),]
 # round AQI
 data_points$AVERAGE_AQI <- round(as.numeric(data_points$AVERAGE_AQI), digits = 0)
 
-i <- 2
+# k <- 2
 
 data_points$category <- NA
 # add names and colour band
-for (i in 1:nrow(data_points)) {
-if (data_points$AVERAGE_AQI[i] < 50 & data_points$AVERAGE_AQI[i] > 0) 
-  data_points$category[i] = c("Good") 
-if (data_points$AVERAGE_AQI[i] < 100 & data_points$AVERAGE_AQI[i] > 51) 
-  data_points$category[i] = c("Moderate") 
-if (data_points$AVERAGE_AQI[i] < 150 & data_points$AVERAGE_AQI[i] > 101) 
-  data_points$category[i] = c("Unhealthy for Sensitive Groups") 
-if (data_points$AVERAGE_AQI[i] < 200 & data_points$AVERAGE_AQI[i] > 151) 
-  data_points$category[i] = c("Unhealthy") 
-if (data_points$AVERAGE_AQI[i] < 300 & data_points$AVERAGE_AQI[i] > 201) 
-  data_points$category[i] = c("Very Unhealthy") 
-if (data_points$AVERAGE_AQI[i] < 500 & data_points$AVERAGE_AQI[i] > 301) 
-  data_points$category[i] = c("Hazardous") 
-} 
-  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI.csv"))
+for (k in 1:nrow(data_points)) {
+  if (data_points$AVERAGE_AQI[k] < 50 & data_points$AVERAGE_AQI[k] >= 0) 
+    data_points$category[k] = c("Good") 
+  if (data_points$AVERAGE_AQI[k] < 100 & data_points$AVERAGE_AQI[k] >= 50) 
+    data_points$category[k] = c("Moderate") 
+  if (data_points$AVERAGE_AQI[k] < 150 & data_points$AVERAGE_AQI[k] >= 100) 
+    data_points$category[k] = c("Unhealthy for Sensitive Groups") 
+  if (data_points$AVERAGE_AQI[k] < 200 & data_points$AVERAGE_AQI[k] >= 150) 
+    data_points$category[k] = c("Unhealthy") 
+  if (data_points$AVERAGE_AQI[k] < 300 & data_points$AVERAGE_AQI[k] >= 200) 
+    data_points$category[k] = c("Very Unhealthy") 
+  if (data_points$AVERAGE_AQI[k] < 500 & data_points$AVERAGE_AQI[k] >= 300) 
+    data_points$category[k] = c("Hazardous") 
+  # write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI.csv"))
   
-# write /csv files when AQI is unhealthy  
-if (data_points$category[i] =="Unhealthy for Sensitive Groups")
-  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_SENSITIVE.csv"))
-if (data_points$category[i] =="Unhealthy")  
-  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_UNHEALTHY.csv"))
-if (data_points$category[i] =="Very Unhealthy") 
-  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_Very_UNHEALTHY.csv"))
-  if (data_points$category[i] =="Hazardous")   
-  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_HAZARD.csv"))
-
+  # write /csv files ONLY when AQI is unhealthy  
+  # if (data_points$category[k] =="Good")
+  #   {
+  #    write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_GOOD.csv"))
+  # } 
+  if (data_points$category[k] =="Moderate")
+  {
+ # write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_MODERATE.csv"))
+  write.csv(filter(data_points, category == 'Moderate'), paste0(output_dir,"/",DateTime, "_AQI_MODERATE.csv"))
+  } 
+  else if (data_points$category[k] =="Unhealthy for Sensitive Groups")
+  {
+    # write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_SENSITIVE.csv"))
+    write.csv(filter(data_points, category == 'Unhealthy for Sensitive Groups'), paste0(output_dir,"/",DateTime, "_AQI_SENSITIVE.csv"))
+  } 
+  else if (data_points$category[k] =="Unhealthy")
+  {
+  #  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_UNHEALTHY.csv"))
+    write.csv(filter(data_points, category == 'Unhealthy'), paste0(output_dir,"/",DateTime, "_AQI_UNHEALTHY.csv"))
+  } 
+  else if (data_points$category[k] =="Very Unhealthy")
+  {
+  #  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_Very_UNHEALTHY.csv"))
+    write.csv(filter(data_points, category == 'Very Unhealthy'), paste0(output_dir,"/",DateTime, "_AQI_Very_UNHEALTHY.csv"))
+  } 
+  else if (data_points$category[k] =="Hazardous")
+  {  
+  # write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_HAZARD.csv"))
+    write.csv(filter(data_points, category == 'Hazardous'), paste0(output_dir,"/",DateTime, "_AQI_HAZARD.csv"))
+  }
+  
+}
 }
 
 
@@ -320,14 +345,15 @@ if (data_points$category[i] =="Very Unhealthy")
 
 
 # makes colors of the circles, accroding to the AQI
-breaks <- c(0, 50, 100, 200, 300, 500)
-colori <- c("#00CD00","#ffff00", "#e59400","#ff0000", "#800080", "#800000")
-pal_AQI <- colorBin(colori, bins=breaks)
-pal_AQI(shp_buff$aqi_PM25)
 
-# check when AQI is bigger than 50 and select locations
-AQI_ALERT <- data_points %>%
-  filter(AVERAGE_AQI > 50)
+# breaks <- c(0, 50, 100, 200, 300, 500)
+# colori <- c("#00CD00","#ffff00", "#e59400","#ff0000", "#800080", "#800000")
+# pal_AQI <- colorBin(colori, bins=breaks)
+# pal_AQI(shp_buff$aqi_PM25)
+# 
+# # check when AQI is bigger than 50 and select locations
+# AQI_ALERT <- data_points %>%
+#   filter(AVERAGE_AQI > 50)
 
 
 
