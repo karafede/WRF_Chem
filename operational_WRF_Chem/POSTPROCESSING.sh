@@ -57,11 +57,6 @@ rm -rf ${wrfout}/wrfout_d0*
 
 /apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/nc_WRFChem_post_proc_d01.R ${date}
 
-# copy first 24h data from the previous day
-/apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/move_AQ_data_24h_day_before.R ${date} ${date_yesterday} 
-# process AQI data
-/apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/AQI_WRFChem_HPC.R ${date}
-
 rsync -avz ${wrfout}/PM10/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/PM10 
 rsync -avz ${wrfout}/PM25/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/PM25 
 rsync -avz ${wrfout}/NO2/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/NO2 
@@ -83,9 +78,21 @@ rsync -avz ${wrfout}/SO2/*.tif fkaragulian@cesam-web-prod:/data/scripts_cron/for
 rsync -avz ${wrfout}/CO/*.tif fkaragulian@cesam-web-prod:/data/scripts_cron/forecast_wrf_chem/CO 
 rsync -avz ${wrfout}/O3/*.tif fkaragulian@cesam-web-prod:/data/scripts_cron/forecast_wrf_chem/O3
 
+# copy first 24h data from the previous day
+/apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/move_AQ_data_24h_day_before.R ${date} ${date_yesterday} 
+
+# process AQI data
+/apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/AQI_WRFChem_HPC.R ${date}
+
 rsync -avz ${wrfout}/AQI/*.tif pvernier@atlas-prod.minet.ae:/home/pvernier/scripts_cron/forecast_wrf_chem/AQI
 rsync -avz ${wrfout}/AQI/*.tif fkaragulian@cesam-web-prod:/data/scripts_cron/forecast_wrf_chem/AQI
 # /home/pvernier/scripts_cron/forecast_wrf_chem/
+
+# remove 24h day before .tif files
+/apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/remove_tif_24h_day_before.R ${date}
+# remove AQI .tif files
+/apps/R/R-3.3.2/bin/Rscript /home/fkaragulian/WRF_UAE/scripts/AQI_tif_remover.R ${date}
+
 
 rm -rf ${wrfout}/wrfpost_d0*  
 

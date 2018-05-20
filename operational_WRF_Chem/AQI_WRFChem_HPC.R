@@ -263,7 +263,7 @@ pts_in_buffer_ID <- over(AQI, shp_buff[, "ID"])
 pts_in_buffer_ID <- na.omit(pts_in_buffer_ID)
 
 
-library(spatialEco)
+# library(spatialEco)
 # find points inside the buffer
 # pts_in_buffer <- point.in.poly(values, shp_buff)
 pts_in_buffer <- AQI[shp_buff,] 

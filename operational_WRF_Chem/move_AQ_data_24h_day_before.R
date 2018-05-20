@@ -15,7 +15,9 @@ library(gstat)
 data <- commandArgs(trailingOnly = TRUE)
 
 date <- data[1]
+date
 date_yesterday <- data[2]
+date_yesterday
 
 # date_yesterday <- commandArgs(trailingOnly = TRUE)
 # date_yesterday
