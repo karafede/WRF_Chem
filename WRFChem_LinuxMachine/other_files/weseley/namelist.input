@@ -1,0 +1,4 @@
+&control
+ wrf_dir = '/home/fkaragulian/ANTHRO/metFiles'
+ domains = 1,
+/
