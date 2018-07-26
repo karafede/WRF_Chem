@@ -146,6 +146,12 @@ qq <- 0
     #  plot(WRF_tif_1km)
     # save rasters
     writeRaster(WRF_tif_1km, paste0(current_dir, "/PM10/",DateTime,".tif") , options= "INTERLEAVE=BAND", overwrite=T)
+    # CONVERISON FILES FOR MOCCAE BIG WEBSITE
+    
+    # new date format
+    
+    # new extent and projection
+    
    }
 
 

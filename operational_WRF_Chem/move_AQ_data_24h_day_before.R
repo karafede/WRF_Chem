@@ -15,15 +15,15 @@ library(gstat)
 data <- commandArgs(trailingOnly = TRUE)
 
 date <- data[1]
-date
+date # date today
 date_yesterday <- data[2]
-date_yesterday
+date_yesterday  # date yesterday
 
 # date_yesterday <- commandArgs(trailingOnly = TRUE)
 # date_yesterday
 
-# date_yesterday <- "2018051300"
-# date <- "2018051400"
+# date_yesterday <- "2018071500"
+# date <- "2018071600"
 
 yesterday_folder_O3 <- paste0("/research/cesam/WRFChem_outputs/", date_yesterday,"/O3")
 yesterday_folder_CO <- paste0("/research/cesam/WRFChem_outputs/", date_yesterday,"/CO")

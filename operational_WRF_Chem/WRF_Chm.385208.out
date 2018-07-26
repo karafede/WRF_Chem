@@ -1,0 +1,42 @@
+Sender: LSF System <phpcadmin@hpc096>
+Subject: Job 385208: <WRF_Chm> in cluster <phpc_cluster> Exited
+
+Job <WRF_Chm> was submitted from host <sub3> by user <fkaragulian> in cluster <phpc_cluster>.
+Job was executed on host(s) <24*hpc096>, in queue <high>, as user <fkaragulian> in cluster <phpc_cluster>.
+                            <24*hpc081>
+                            <24*hpc087>
+                            <24*hpc080>
+</home/fkaragulian> was used as the home directory.
+</disk3/fkaragulian/WRF_UAE/scripts> was used as the working directory.
+Started at Thu Jul  5 09:05:04 2018
+Results reported on Thu Jul  5 15:05:08 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/disk3/fkaragulian/WRF_UAE/scripts/execute_Model_lsf.sh 1>/home/fkaragulian/log/chemrun.log 2>/home/fkaragulian/log/chem-error.log
+------------------------------------------------------------
+
+TERM_RUNLIMIT: job killed after reaching LSF run time limit.
+Exited with exit code 140.
+
+Resource usage summary:
+
+    CPU time :                                   1407598.00 sec.
+    Max Memory :                                 176018 MB
+    Average Memory :                             122872.40 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   212900 MB
+    Max Processes :                              75
+    Max Threads :                                291
+
+The output (if any) follows:
+
+
+
+PS:
+
+Read file <WRF_Chm.385208.err> for stderr output of this job.
+

@@ -7,12 +7,12 @@ aqi_O3_fun <- function(dawit){
   
   # for the first break point I have used the value from UAE (units == ppb)
   
-  if (!is.na(dawit) & dawit < 51.02 & dawit > 0)
-    AQI_O3 = ((50-0)/(51.02-0)) * (dawit - 0) + 0
+  if (!is.na(dawit) & dawit < 61.22 & dawit > 0)
+    AQI_O3 = ((50-0)/(61.22-0)) * (dawit - 0) + 0
   
 
-  if (!is.na(dawit) & dawit < 70 & dawit> 52)
-    AQI_O3 = ((100-51)/(70-52)) * (dawit - 52) + 51
+  if (!is.na(dawit) & dawit < 70 & dawit> 61.5)
+    AQI_O3 = ((100-51)/(70-61.5)) * (dawit - 61.5) + 51
   
   if (!is.na(dawit) & dawit < 85 & dawit > 71)
     AQI_O3 = ((150-101)/(85-71)) * (dawit - 71) + 101
@@ -39,16 +39,16 @@ return(AQI_O3)
   
 
 ### CO #####
-# converted into ppm
+# converted into ppb
 
 aqi_CO_fun <- function(dawit){
   
   # GOOD
-  if (!is.na(dawit) & dawit < 9.04 & dawit > 0)
-     AQI_CO = ((50-0)/(9.04-0)) * (dawit - 0) + 0
+  if (!is.na(dawit) & dawit < 8.69 & dawit > 0)
+     AQI_CO = ((50-0)/(8.69-0)) * (dawit - 0) + 0
   
-  if (!is.na(dawit) & dawit < 9.4 & dawit > 9.1)
-    AQI_CO = ((100-51)/(9.4-9.1)) * (dawit - 9.1) + 51
+  if (!is.na(dawit) & dawit < 9.4 & dawit > 8.71)
+    AQI_CO = ((100-51)/(9.4-8.71)) * (dawit - 8.71) + 51
   
   if (!is.na(dawit) & dawit < 12.4 & dawit > 9.5)
     AQI_CO = ((150-101)/(12.4-9.5)) * (dawit - 9.5) + 101
@@ -85,55 +85,45 @@ aqi_CO_fun <- function(dawit){
 
 aqi_PM25_fun <- function(dawit){
   
-  # if (!is.na(dawit) & dawit < 12 & dawit > 0)
-  #   AQI_PM25 = ((50-0)/(12-0)) * (dawit - 0) + 0
+  # GOOD  
+  
+  if (!is.na(dawit) & dawit < 12 & dawit > 0)
+    AQI_PM25 = ((50-0)/(12-0)) * (dawit - 0) + 0
 
-  # GOOD
-  # if (!is.na(dawit) & dawit < 60 & dawit > 0)                  to use
+
+  # if (!is.na(dawit) & dawit < 60 & dawit > 0)
   #   AQI_PM25 = ((50-0)/(60-0)) * (dawit - 0) + 0
+ 
+   # MODERATE 
   
-  if (!is.na(dawit) & dawit < 30 & dawit > 0)
-    AQI_PM25 = ((50-0)/(30-0)) * (dawit - 0) + 0
+  if (!is.na(dawit) & dawit < 35.4 & dawit > 12.1)
+    AQI_PM25 = ((100-51)/(35.4-12.1)) * (dawit - 12.1) + 51
   
-
-  # if (!is.na(dawit) & dawit < 35.4 & dawit > 12.1)
-  #   AQI_PM25 = ((100-51)/(35.4-12.1)) * (dawit - 12.1) + 51
-  
-  # MODERATE
-   # if (!is.na(dawit) & dawit < 150.4 & dawit > 60.1)            to use
-   #   AQI_PM25 = ((100-51)/(150.4-60.1)) * (dawit - 60.1) + 51
-   
-   if (!is.na(dawit) & dawit < 150.4 & dawit > 30.1)
-     AQI_PM25 = ((100-51)/(150.4-30.1)) * (dawit - 30.1) + 51
   
    # UNHEALTHY for SENSITIVE GROUPS
-   if (!is.na(dawit) & dawit < 250.4 & dawit > 150.5)
-     AQI_PM25 = ((150-101)/(250.4-150.5)) * (dawit - 150.5) + 201
 
-  # if (!is.na(dawit) & dawit < 55.4 & dawit > 35.5)
-  #   AQI_PM25 = ((150-101)/(55.4-35.5)) * (dawit - 35.5) + 101
+  if (!is.na(dawit) & dawit < 55.4 & dawit > 35.5)
+    AQI_PM25 = ((150-101)/(55.4-35.5)) * (dawit - 35.5) + 101
    
    # UNHEALTHY
-   if (!is.na(dawit) & dawit < 350.4 & dawit > 250.5)
-     AQI_PM25 = ((200-151)/(350.4-250.5)) * (dawit - 250.5) + 301
   
-  
-  # if (!is.na(dawit) & dawit < 150.4 & dawit > 55.5)
-  #   AQI_PM25 = ((200-151)/(150.4-55.5)) * (dawit - 55.5) + 151
+  if (!is.na(dawit) & dawit < 150.4 & dawit > 55.5)
+    AQI_PM25 = ((200-151)/(150.4-55.5)) * (dawit - 55.5) + 151
    
    # VERY UNHEALTHY
-   if (!is.na(dawit) & dawit < 500.4 & dawit > 350.5)
-     AQI_PM25 = ((300-201)/(500.4-350.5)) * (dawit - 350.5) + 401
-   
   
-  # if (!is.na(dawit) & dawit < 250.4 & dawit > 150.5)
-  #   AQI_PM25 = ((300-201)/(250.4-150.5)) * (dawit - 150.5) + 201
-  # 
-  # if (!is.na(dawit) & dawit < 350.4 & dawit > 250.5)
-  #   AQI_PM25 = ((400-301)/(350.4-250.5)) * (dawit - 250.5) + 301
-  # 
-  # if (!is.na(dawit) & dawit < 500.4 & dawit > 350.5)
-  #   AQI_PM25 = ((500-401)/(500.4-350.5)) * (dawit - 350.5) + 401
+  if (!is.na(dawit) & dawit < 250.4 & dawit > 150.5)
+    AQI_PM25 = ((300-201)/(250.4-150.5)) * (dawit - 150.5) + 201
+  
+  
+# Hazardous 
+
+
+  if (!is.na(dawit) & dawit < 350.4 & dawit > 250.5)
+    AQI_PM25 = ((400-301)/(350.4-250.5)) * (dawit - 250.5) + 301
+
+  if (!is.na(dawit) & dawit < 500.4 & dawit > 350.5)
+    AQI_PM25 = ((500-401)/(500.4-350.5)) * (dawit - 350.5) + 401
 
   
   if(is.na(dawit))
@@ -153,11 +143,17 @@ aqi_PM25_fun <- function(dawit){
 
 aqi_PM10_fun <- function(dawit){
   
-  if (!is.na(dawit) & dawit  < 150.4 & dawit  > 0)
-    AQI_PM10 = ((50-0)/(150.4-0)) * (dawit  - 0) + 0
+  # if (!is.na(dawit) & dawit  < 150 & dawit  > 0)
+  #   AQI_PM10 = ((50-0)/(150-0)) * (dawit  - 0) + 0
+  # 
+  # if (!is.na(dawit) & dawit < 154 & dawit > 151)
+  #   AQI_PM10 = ((100-51)/(154-151)) * (dawit - 151) + 51
   
-  if (!is.na(dawit) & dawit < 154 & dawit > 151)
-    AQI_PM10 = ((100-51)/(154-151)) * (dawit - 151) + 51
+  if (!is.na(dawit) & dawit  < 75 & dawit  > 0)
+    AQI_PM10 = ((50-0)/(150-0)) * (dawit  - 0) + 0
+  
+  if (!is.na(dawit) & dawit < 154 & dawit > 76)
+    AQI_PM10 = ((100-51)/(154-76)) * (dawit - 76) + 51
   
   if (!is.na(dawit) & dawit < 254 & dawit > 155)
     AQI_PM10 = ((150-101)/(254-155)) * (dawit - 155) + 101
@@ -192,11 +188,11 @@ aqi_PM10_fun <- function(dawit){
 
 aqi_SO2_fun <- function(dawit){
 
-if (!is.na(dawit) & dawit < 7.78 & dawit > 0)
-  AQI_SO2 = ((50-0)/(7.78-0)) * (dawit - 0) + 0
+if (!is.na(dawit) & dawit < 57.2 & dawit > 0)
+  AQI_SO2 = ((50-0)/(57.2-0)) * (dawit - 0) + 0
 
-if (!is.na(dawit) & dawit < 75 & dawit > 7.8)
-  AQI_SO2 = ((100-51)/(75-7.8)) * (dawit - 7.8) + 51
+if (!is.na(dawit) & dawit < 75 & dawit > 57.3)
+  AQI_SO2 = ((100-51)/(75-57.3)) * (dawit - 57.3) + 51
 
 if (!is.na(dawit) & dawit < 185 & dawit > 76)
   AQI_SO2 = ((150-101)/(185-76)) * (dawit - 76) + 101
@@ -231,11 +227,11 @@ return(AQI_SO2)
 
 aqi_NO2_fun <- function(dawit){
 
-if (!is.na(dawit) & dawit < 40.1 & dawit > 0)
-  AQI_NO2 = ((50-0)/(40.1-0)) * (dawit - 0) + 0
+if (!is.na(dawit) & dawit < 79.78 & dawit > 0)
+  AQI_NO2 = ((50-0)/(79.78-0)) * (dawit - 0) + 0
 
-if (!is.na(dawit) & dawit < 100 & dawit > 41)
-  AQI_NO2 = ((100-51)/(100-41)) * (dawit - 41) + 51
+if (!is.na(dawit) & dawit < 100 & dawit > 80)
+  AQI_NO2 = ((100-51)/(100-80)) * (dawit - 80) + 51
 
 if (!is.na(dawit) & dawit < 360 & dawit > 101)
   AQI_NO2 = ((150-101)/(360-101)) * (dawit - 101) + 101

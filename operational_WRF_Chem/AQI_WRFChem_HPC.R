@@ -44,7 +44,7 @@ day <- str_sub(time, start = 9, end = -10)
 
 folder_day <- date
 
-# folder_day <- "2018051300"
+# folder_day <- "2018071500"
 setwd(paste0("/research/cesam/WRFChem_outputs/", folder_day))
 # setwd("Z:/_SHARED_FOLDERS/Air Quality/Phase 2/AQI_WRFChem")
 
@@ -72,7 +72,7 @@ filenames_O3 <- list.files(path = dir_O3, pattern = ".tif$")
 # i <-35 
 # always start from the 25th hour (except for Ozone)
 
-for(i in 25:length(filenames_PM25)) {
+for(i in 13:length(filenames_PM25)) {
   # for(i in 1:5) {
   
   # create name for each file    
@@ -86,36 +86,42 @@ for(i in 25:length(filenames_PM25)) {
   # make the average of the rasters within the last 24-hours
   stack_PM25 <- stack()
   
-  for(j in (i-24):((i-24)+23)) {
+  for(j in (i-12):((i-12)+11)) {
     stack_PM25 <- stack(stack_PM25, raster(paste0(dir_PM25, filenames_PM25[j])))
   }
-  # 24h average
-  r_PM25 <- mean(stack_PM25)
-  r_pts_PM25 <- rasterToPoints(r_PM25)
-  colnames(r_pts_PM25) <- c("Lon", "Lat", "PM25_1km")
-  r_pts_PM25 <- as.data.frame(r_pts_PM25) 
-  # r_pts_PM25 <- subset(r_pts_PM25, !is.na(PM25_1km) & PM25_1km>0)
-  PM25_data <- as.vector(r_pts_PM25$PM25_1km)
-  PM25_data <- round(PM25_data, digits = 0)
-  PM25_data <- as.numeric(PM25_data)
   
+  # for(j in (i-24):((i-24)+23)) {
+  #   if (i < 24) {}
+  #   else {stack_PM25 <- stack(stack_PM25, raster(paste0(dir_PM25, filenames_PM25[j])))}
+  # }
+  # 24h average
+    r_PM25 <- mean(stack_PM25)
+    r_pts_PM25 <- rasterToPoints(r_PM25)
+    colnames(r_pts_PM25) <- c("Lon", "Lat", "PM25_1km")
+    r_pts_PM25 <- as.data.frame(r_pts_PM25) 
+    # r_pts_PM25 <- subset(r_pts_PM25, !is.na(PM25_1km) & PM25_1km>0)
+    PM25_data <- as.vector(r_pts_PM25$PM25_1km)
+    PM25_data <- round(PM25_data, digits = 0)
+    PM25_data <- as.numeric(PM25_data)
+
   
   # PM10
   # make the average of the rasters within the last 24-hours
   stack_PM10 <- stack()
   
-  for(j in (i-24):((i-24)+23)) {
-    stack_PM10 <- stack(stack_PM10, raster(paste0(dir_PM25, filenames_PM10[j])))
+  for(j in (i-12):((i-12)+11)) {
+    stack_PM10 <- stack(stack_PM10, raster(paste0(dir_PM10, filenames_PM10[j])))
   }
   # 24h average
-  r_PM10 <- mean(stack_PM10)
-  r_pts_PM10 <- rasterToPoints(r_PM10)
-  colnames(r_pts_PM10) <- c("Lon", "Lat", "PM10_1km")
-  r_pts_PM10 <- as.data.frame(r_pts_PM10) 
-  # r_pts_PM10 <- subset(r_pts_PM10, !is.na(PM10_1km) & PM10_1km>0)
-  PM10_data <- as.vector(r_pts_PM10$PM10_1km)
-  PM10_data <- round(PM10_data, digits = 0)
-  PM10_data <- as.numeric(PM10_data)
+    r_PM10 <- mean(stack_PM10)
+    r_pts_PM10 <- rasterToPoints(r_PM10)
+    colnames(r_pts_PM10) <- c("Lon", "Lat", "PM10_1km")
+    r_pts_PM10 <- as.data.frame(r_pts_PM10) 
+    # r_pts_PM10 <- subset(r_pts_PM10, !is.na(PM10_1km) & PM10_1km>0)
+    PM10_data <- as.vector(r_pts_PM10$PM10_1km)
+    PM10_data <- round(PM10_data, digits = 0)
+    PM10_data <- as.numeric(PM10_data)
+  
   
   
   # CO
@@ -125,52 +131,54 @@ for(i in 25:length(filenames_PM25)) {
   for(j in (i-8):((i-8)+7)) {
     stack_CO <- stack(stack_CO, raster(paste0(dir_CO, filenames_CO[j])))
   }
-  # 8-h average
-  r_CO <- mean(stack_CO)
-  r_pts_CO <- rasterToPoints(r_CO)
-  colnames(r_pts_CO) <- c("Lon", "Lat", "CO_1km")
-  r_pts_CO <- as.data.frame(r_pts_CO) 
-  # r_pts_CO <- subset(r_pts_CO, !is.na(CO_1km) & CO_1km>0)
-  CO_data <- as.vector(r_pts_CO$CO_1km)
-  CO_data <- round(CO_data, digits = 0)
-  CO_data <- as.numeric(CO_data)
+  # 8h average
+    r_CO <- mean(stack_CO)
+    r_pts_CO <- rasterToPoints(r_CO)
+    colnames(r_pts_CO) <- c("Lon", "Lat", "CO_1km")
+    r_pts_CO <- as.data.frame(r_pts_CO) 
+    # r_pts_CO <- subset(r_pts_CO, !is.na(CO_1km) & CO_1km>0)
+    CO_data <- as.vector(r_pts_CO$CO_1km)
+    CO_data <- round(CO_data, digits = 0)
+    # conversion from mg/m3 to ppm (WHO conversion factor)
+    CO_data <- as.numeric(CO_data)/1.15 
+
   
   
   # NO2
   # make the average of the rasters within the last 24-hours
   stack_NO2 <- stack()
   
-  for(j in (i-24):((i-24)+23)) {
+  for(j in (i-12):((i-12)+11)) {
     stack_NO2 <- stack(stack_NO2, raster(paste0(dir_NO2, filenames_NO2[j])))
   }
-  # 24-h average
-  r_NO2 <- mean(stack_NO2)
-  r_pts_NO2 <- rasterToPoints(r_NO2)
-  colnames(r_pts_NO2) <- c("Lon", "Lat", "NO2_1km")
-  r_pts_NO2 <- as.data.frame(r_pts_NO2) 
-  # r_pts_NO2 <- subset(r_pts_NO2, !is.na(NO2_1km) & NO2_1km>0)
-  NO2_data <- as.vector(r_pts_NO2$NO2_1km)
-  NO2_data <- round(NO2_data, digits = 0)
-  NO2_data <- as.numeric(NO2_data)
+  # 24h average
+    r_NO2 <- mean(stack_NO2)
+    r_pts_NO2 <- rasterToPoints(r_NO2)
+    colnames(r_pts_NO2) <- c("Lon", "Lat", "NO2_1km")
+    r_pts_NO2 <- as.data.frame(r_pts_NO2) 
+    # r_pts_NO2 <- subset(r_pts_NO2, !is.na(NO2_1km) & NO2_1km>0)
+    NO2_data <- as.vector(r_pts_NO2$NO2_1km)
+    NO2_data <- round(NO2_data, digits = 0)
+    NO2_data <- as.numeric(NO2_data)/1.88
   
   
   # SO2
   # make the average of the rasters within the last 24-hours
   stack_SO2 <- stack()
   
-  for(j in (i-24):((i-24)+23)) {
+  for(j in (i-12):((i-12)+11)) {
     stack_SO2 <- stack(stack_SO2, raster(paste0(dir_SO2, filenames_SO2[j])))
   }
-  # 24-h average
-  r_SO2 <- mean(stack_SO2)
-  r_pts_SO2 <- rasterToPoints(r_SO2)
-  colnames(r_pts_SO2) <- c("Lon", "Lat", "SO2_1km")
-  r_pts_SO2 <- as.data.frame(r_pts_SO2) 
-  # r_pts_SO2 <- subset(r_pts_SO2, !is.na(SO2_1km) & SO2_1km>0)
-  SO2_data <- as.vector(r_pts_SO2$SO2_1km)
-  SO2_data <- round(SO2_data, digits = 0)
-  SO2_data <- as.numeric(SO2_data)
-  
+  # 24h average
+    r_SO2 <- mean(stack_SO2)
+    r_pts_SO2 <- rasterToPoints(r_SO2)
+    colnames(r_pts_SO2) <- c("Lon", "Lat", "SO2_1km")
+    r_pts_SO2 <- as.data.frame(r_pts_SO2) 
+    # r_pts_SO2 <- subset(r_pts_SO2, !is.na(SO2_1km) & SO2_1km>0)
+    SO2_data <- as.vector(r_pts_SO2$SO2_1km)
+    SO2_data <- round(SO2_data, digits = 0)
+    SO2_data <- as.numeric(SO2_data)/2.62
+
   
   # O3
   # make the average of the rasters within the last 8-hours
@@ -179,17 +187,17 @@ for(i in 25:length(filenames_PM25)) {
   for(j in (i-8):((i-8)+7)) {
     stack_O3 <- stack(stack_O3, raster(paste0(dir_O3, filenames_O3[j])))
   }
-  
-  # 8-h average
-  r_O3 <- mean(stack_O3)  
-  r_pts_O3 <- rasterToPoints(r_O3)
-  colnames(r_pts_O3) <- c("Lon", "Lat", "O3_1km")
-  r_pts_O3 <- as.data.frame(r_pts_O3) 
-  # r_pts_O3 <- subset(r_pts_O3, !is.na(O3_1km) & O3_1km>0)
-  O3_data <- as.vector(r_pts_O3$O3_1km)
-  O3_data <- round(O3_data, digits = 0)
-  O3_data <- as.numeric(O3_data)
-  
+  # 8h average
+    r_O3 <- mean(stack_O3)  
+    r_pts_O3 <- rasterToPoints(r_O3)
+    colnames(r_pts_O3) <- c("Lon", "Lat", "O3_1km")
+    r_pts_O3 <- as.data.frame(r_pts_O3) 
+    # r_pts_O3 <- subset(r_pts_O3, !is.na(O3_1km) & O3_1km>0)
+    O3_data <- as.vector(r_pts_O3$O3_1km)
+    O3_data <- round(O3_data, digits = 0)
+    # conversion from ug/m3 to ppb (WHO conversion factor)
+    O3_data <- as.numeric(O3_data)/1.96
+
 
 # calculate Air Quality index for PM2.5
 aqi_PM25 <- lapply(PM25_data, aqi_PM25_fun)
@@ -246,7 +254,6 @@ crs(r) = "+proj=longlat +datum=WGS84"
 # plot(shp_UAE, add = TRUE)
 
 writeRaster(r, paste0(output_dir,"/",DateTime, "_AQI.tif") , options= "INTERLEAVE=BAND", overwrite=T)
-
 
 #######################################################
 # generate .csv files for AQI with unhealthy values ###
@@ -309,35 +316,80 @@ for (k in 1:nrow(data_points)) {
     data_points$category[k] = c("Hazardous") 
 # write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI.csv"))
 
-# write /csv files ONLY when AQI is unhealthy  
+##################################################  
+# write /csv files ONLY when AQI is unhealthy ####
+##################################################  
+  
 # if (data_points$category[k] =="Good")
 #   {
 #    write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_GOOD.csv"))
-# } 
-if (data_points$category[k] =="Moderate")
+# }
+  
+  if (data_points$category[k] =="Moderate")
   {
-   write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_MODERATE.csv"))
- } 
-else if (data_points$category[k] =="Unhealthy for Sensitive Groups")
+    # write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_MODERATE.csv"))
+    write.csv(filter(data_points, category == 'Moderate'), paste0(output_dir,"/",DateTime, "_AQI_MODERATE.csv"))
+  } 
+  else if (data_points$category[k] =="Unhealthy for Sensitive Groups")
   {
-  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_SENSITIVE.csv"))
-} 
-else if (data_points$category[k] =="Unhealthy")
+    # write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_SENSITIVE.csv"))
+    write.csv(filter(data_points, category == 'Unhealthy for Sensitive Groups'), paste0(output_dir,"/",DateTime, "_AQI_SENSITIVE.csv"))
+  } 
+  else if (data_points$category[k] =="Unhealthy")
   {
-  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_UNHEALTHY.csv"))
-} 
-else if (data_points$category[k] =="Very Unhealthy")
+    #  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_UNHEALTHY.csv"))
+    write.csv(filter(data_points, category == 'Unhealthy'), paste0(output_dir,"/",DateTime, "_AQI_UNHEALTHY.csv"))
+  } 
+  else if (data_points$category[k] =="Very Unhealthy")
   {
-  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_Very_UNHEALTHY.csv"))
-} 
-else if (data_points$category[k] =="Hazardous")
+    #  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_Very_UNHEALTHY.csv"))
+    write.csv(filter(data_points, category == 'Very Unhealthy'), paste0(output_dir,"/",DateTime, "_AQI_Very_UNHEALTHY.csv"))
+  } 
+  else if (data_points$category[k] =="Hazardous")
   {  
-  write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_HAZARD.csv"))
+    # write.csv(data_points, paste0(output_dir,"/",DateTime, "_AQI_HAZARD.csv"))
+    write.csv(filter(data_points, category == 'Hazardous'), paste0(output_dir,"/",DateTime, "_AQI_HAZARD.csv"))
+  }
+}
 }
 
-}
+###############################################################################
+###############################################################################
+###############################################################################
+
+dir_AQI <- output_dir
+filenames_AQI <- list.files(path = dir_AQI, pattern = ".csv$")
+
+# open each .csv file and bind all data together
+
+# i <- 3
+
+AQI <- NULL
+
+for (i in 1: length(filenames_AQI)) {
+  aqi <- read.csv(paste0(dir_AQI, "/", filenames_AQI[i]))[-1]
+  
+  year <- str_sub(filenames_AQI[i], start = 1, end = -27)
+  month <- str_sub(filenames_AQI[i], start = 6, end = -24)
+  day <- str_sub(filenames_AQI[i], start = 9, end = -21)
+  Date <- as.Date(paste0(year , "-", month, "-", day))
+  category <- str_sub(filenames_AQI[i], start = 19, end = -5)
+  
+  aqi <- cbind(Date, aqi)
+  
+  AQI = rbind(AQI, data.frame(aqi))
+  
 }
 
+
+# group by station and chose the maximum AQI value
+AQI <- AQI %>%
+  group_by(ID,
+           Date,
+           category) %>%
+  summarize(max_AQI=max(AVERAGE_AQI))
+
+write.csv(AQI, paste0(output_dir, "/" , "AQI_", folder_day, ".csv"))
 
 
 
