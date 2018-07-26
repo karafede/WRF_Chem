@@ -1,13 +1,13 @@
 &time_control
  start_year                          = 2018, 2018,2018
  start_month                         = 07, 07,07
- start_day                           = 10, 10,10
+ start_day                           = 25, 25,25
  start_hour                          = 00, 00,00
  start_minute                        = 00,   00,   00,
  start_second                        = 00,   00,   00,
  end_year                            = 2018,2018,2018
  end_month                           = 07,07,07
- end_day                             = 13,13,13
+ end_day                             = 28,28,28
  end_hour                            = 00,00,00
  end_minute                          = 00,   00,   00,
  end_second                          = 00,   00,   00,

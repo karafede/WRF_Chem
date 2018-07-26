@@ -21,6 +21,11 @@ dir <- "/home/cesam/WRF_UAE/scripts/UAE_boundary"
 ### shapefile for UAE
 shp_UAE <- readOGR(dsn = dir, layer = "uae_emirates")
 
+dir_ME <- "/research/cesam/AirQuality/WRFChem_domain/"
+shp_UAE <- readOGR(dsn = dir_ME, layer = "ADMIN_domain_d01_4km_WRFChem")
+shp_UAE <- spTransform(shp_UAE, CRS("+init=epsg:4326"))
+
+
 # ----- Transform to EPSG 4326 - WGS84 (required)
 shp_UAE <- spTransform(shp_UAE, CRS("+init=epsg:4326"))
 
@@ -28,6 +33,7 @@ shp_UAE <- spTransform(shp_UAE, CRS("+init=epsg:4326"))
 dir <- "/home/cesam/WRF_UAE/scripts/UAE_moccae_domain/"
 UAE_shape <- readOGR(dsn = dir, layer = "UAE_shape")
 raster_sample <- raster("/home/cesam/WRF_UAE/scripts/Sample_RECREMA.tif")
+sample_raster_HPC <- raster("/home/cesam/WRF_UAE/scripts/sample_raster_HPC.tif")
 
 # read buffer zones around locations in the UAE (this is a ~ 14km buffer zone)
 dir <- "/home/cesam/WRF_UAE/scripts/shapes"
@@ -44,11 +50,11 @@ year <- year <- str_sub(time, start = 0, end = -16)
 month <- str_sub(time, start = 6, end = -13)
 day <- str_sub(time, start = 9, end = -10)
 
-# folder_day <- paste0(year,month, day,"00")    # "2017120400"
+# folder_day <- paste0(year,month, day,"00")    # "2018071500"
 
 folder_day <- date
 
-# folder_day <- "2018051300"
+# folder_day <- "2018071500"
 setwd(paste0("/research/cesam/WRFChem_outputs/", folder_day))
 # setwd("Z:/_SHARED_FOLDERS/Air Quality/Phase 2/AQI_WRFChem")
 
@@ -93,9 +99,13 @@ for(i in 25:length(filenames_PM25)) {
   # make the average of the rasters within the last 24-hours
   stack_PM25 <- stack()
   
-  for(j in (i-24):((i-24)+23)) {
+  for(j in (i-12):((i-12)+11)) {
     stack_PM25 <- stack(stack_PM25, raster(paste0(dir_PM25, filenames_PM25[j])))
   }
+  # for(j in (i-24):((i-24)+23)) {
+  #   if (i < 24) {}
+  #   else {stack_PM25 <- stack(stack_PM25, raster(paste0(dir_PM25, filenames_PM25[j])))}
+  # }
   # 24h average
   r_PM25 <- mean(stack_PM25)
   r_pts_PM25 <- rasterToPoints(r_PM25)
@@ -107,14 +117,15 @@ for(i in 25:length(filenames_PM25)) {
   PM25_data <- as.numeric(PM25_data)
   
   
+  
   # PM10
   # make the average of the rasters within the last 24-hours
   stack_PM10 <- stack()
   
-  for(j in (i-24):((i-24)+23)) {
-    stack_PM10 <- stack(stack_PM10, raster(paste0(dir_PM25, filenames_PM10[j])))
+  for(j in (i-12):((i-12)+11)) {
+    stack_PM10 <- stack(stack_PM10, raster(paste0(dir_PM10, filenames_PM10[j])))
   }
-  # 24h average
+# 24h average
   r_PM10 <- mean(stack_PM10)
   r_pts_PM10 <- rasterToPoints(r_PM10)
   colnames(r_pts_PM10) <- c("Lon", "Lat", "PM10_1km")
@@ -123,6 +134,8 @@ for(i in 25:length(filenames_PM25)) {
   PM10_data <- as.vector(r_pts_PM10$PM10_1km)
   PM10_data <- round(PM10_data, digits = 0)
   PM10_data <- as.numeric(PM10_data)
+
+  
   
   
   # CO
@@ -132,7 +145,7 @@ for(i in 25:length(filenames_PM25)) {
   for(j in (i-8):((i-8)+7)) {
     stack_CO <- stack(stack_CO, raster(paste0(dir_CO, filenames_CO[j])))
   }
-  # 8-h average
+  # 8h average
   r_CO <- mean(stack_CO)
   r_pts_CO <- rasterToPoints(r_CO)
   colnames(r_pts_CO) <- c("Lon", "Lat", "CO_1km")
@@ -144,14 +157,15 @@ for(i in 25:length(filenames_PM25)) {
   CO_data <- as.numeric(CO_data)/1.15 
   
   
+  
   # NO2
   # make the average of the rasters within the last 24-hours
   stack_NO2 <- stack()
   
-  for(j in (i-24):((i-24)+23)) {
+  for(j in (i-12):((i-12)+11)) {
     stack_NO2 <- stack(stack_NO2, raster(paste0(dir_NO2, filenames_NO2[j])))
   }
-  # 24-h average
+  # 24h average
   r_NO2 <- mean(stack_NO2)
   r_pts_NO2 <- rasterToPoints(r_NO2)
   colnames(r_pts_NO2) <- c("Lon", "Lat", "NO2_1km")
@@ -162,14 +176,16 @@ for(i in 25:length(filenames_PM25)) {
   NO2_data <- as.numeric(NO2_data)/1.88
   
   
+  
+  
   # SO2
   # make the average of the rasters within the last 24-hours
   stack_SO2 <- stack()
   
-  for(j in (i-24):((i-24)+23)) {
+  for(j in (i-12):((i-12)+11)) {
     stack_SO2 <- stack(stack_SO2, raster(paste0(dir_SO2, filenames_SO2[j])))
   }
-  # 24-h average
+  # 24h average
   r_SO2 <- mean(stack_SO2)
   r_pts_SO2 <- rasterToPoints(r_SO2)
   colnames(r_pts_SO2) <- c("Lon", "Lat", "SO2_1km")
@@ -180,6 +196,8 @@ for(i in 25:length(filenames_PM25)) {
   SO2_data <- as.numeric(SO2_data)/2.62
   
   
+  
+  
   # O3
   # make the average of the rasters within the last 8-hours
   stack_O3 <- stack()
@@ -187,8 +205,7 @@ for(i in 25:length(filenames_PM25)) {
   for(j in (i-8):((i-8)+7)) {
     stack_O3 <- stack(stack_O3, raster(paste0(dir_O3, filenames_O3[j])))
   }
-  
-  # 8-h average
+  # 8h average
   r_O3 <- mean(stack_O3)  
   r_pts_O3 <- rasterToPoints(r_O3)
   colnames(r_pts_O3) <- c("Lon", "Lat", "O3_1km")
@@ -199,7 +216,7 @@ for(i in 25:length(filenames_PM25)) {
   # conversion from ug/m3 to ppb (WHO conversion factor)
   O3_data <- as.numeric(O3_data)/1.96
   
-
+  
 # calculate Air Quality index for PM2.5
 aqi_PM25 <- lapply(PM25_data, aqi_PM25_fun)
 aqi_PM25 <- as.numeric(aqi_PM25)
@@ -254,15 +271,109 @@ crs(r) = "+proj=longlat +datum=WGS84"
 # plot(r)
 # plot(shp_UAE, add = TRUE)
 
+
+# r <- crop(r, extent(shp_UAE))
+# r <- mask(r, shp_UAE)
+r <- projectRaster(r, sample_raster_HPC)
 writeRaster(r, paste0(output_dir,"/",DateTime, "_AQI.tif") , options= "INTERLEAVE=BAND", overwrite=T)
 
-## crop
-r <- crop(r, extent(UAE_shape))
-r <- mask(r, UAE_shape)
 
-## make resolution as for RECREMA file
-r = projectRaster(r, raster_sample)
+## crop
+WRF_tif_1km <- crop(r, extent(UAE_shape))
+WRF_tif_1km <- mask(WRF_tif_1km, UAE_shape)
+
+
+# make resolution and extent as for RECREMA file
+WRF_tif_1km_pts <- rasterToPoints(WRF_tif_1km)
+colnames(WRF_tif_1km_pts) <- c("Lon", "Lat", "value")
+WRF_tif_1km_pts <- as.data.frame(WRF_tif_1km_pts) 
+
+WRF_tif_1km_pts$x <- WRF_tif_1km_pts$Lon
+WRF_tif_1km_pts$y <- WRF_tif_1km_pts$Lat
+
+coordinates(WRF_tif_1km_pts) = ~x + y  ## Set spatial coordinates to create a Spatial object:
+
+x.range <- as.numeric(c(51.5319495550555, 56.3933081454769), options(digits = 13))  # min/max longitude of the interpolation area
+y.range <- as.numeric(c(22.6000614885832, 26.05610805803908), options(digits = 13))  # min/max latitude of the interpolation area
+
+
+## grid at given resolution
+grd <- expand.grid(x = seq(from = x.range[1], to = x.range[2], by = 0.0200056140100055),
+                   y = seq(from = y.range[1], to = y.range[2], by = 0.0200059596012141))  # expand points to grid
+coordinates(grd) <- ~x + y
+gridded(grd) <- TRUE
+
+idw <- idw(formula = value ~ 1, locations = WRF_tif_1km_pts, 
+           newdata = grd)  # apply idw model for the data (interpolation)
+
+idw.output = as.data.frame(idw)[1:3]  # output is defined as a data table
+names(idw.output)[1:3] <- c("Lon", "Lat", "value")  # give names to the modelled variables
+
+
+coordinates(idw.output) <- ~ Lon + Lat
+##coerce to SpatialPixelsDataFrame
+gridded(idw.output) <- TRUE
+raster_layer <- raster(idw.output)
+projection(raster_layer) <- CRS("+proj=longlat +datum=WGS84")
+
+raster_layer <- crop(raster_layer, extent(UAE_shape))
+raster_layer<- mask(raster_layer, UAE_shape)
+raster_layer <- raster_layer*1.5
+
+writeRaster(raster_layer, paste0(RECREMA_dir_AQI, "AQI_",new_DateTime,".tif") , options= "INTERLEAVE=BAND", overwrite=T)
+
+
+######################################
+#### make class from AQI ranges ######
+######################################
+
+data_points <- rasterToPoints(raster_layer)
+colnames(data_points) <- c("Lon", "Lat", "AQI")
+data_points <- as.data.frame(data_points) 
+
+# remove lines with Na values
+data_points <- data_points[!is.na(data_points$AQI),]
+# round AQI
+# data_points$AQI <- round(as.numeric(data_points$AQI), digits = 0)
+
+# k <- 2
+
+data_points$category <- NA
+# add classes
+for (k in 1:nrow(data_points)) {
+  if (data_points$AQI[k] < 50 & data_points$AQI[k] >= 0) 
+    data_points$category[k] = 0   # Good
+  if (data_points$AQI[k] < 100 & data_points$AQI[k] >= 50) 
+    data_points$category[k] = 1   # Moderate
+  if (data_points$AQI[k] < 150 & data_points$AQI[k] >= 100) 
+    data_points$category[k] = 2   # Unhealthy for Sensitive Groups
+  if (data_points$AQI[k] < 200 & data_points$AQI[k] >= 150) 
+    data_points$category[k] = 3   # Unhealthy
+  if (data_points$AQI[k] < 300 & data_points$AQI[k] >= 200) 
+    data_points$category[k] = 4   # Very Unhealthy
+  if (data_points$AQI[k] < 500 & data_points$AQI[k] >= 300) 
+    data_points$category[k] = 5   # Hazardous
+}
+
+# select only the Maximum AQI
+AQI_class <- data_points %>%
+  select(Lon,
+         Lat,
+         category)
+
+# make a raster for each filenames
+# create spatial points data frame
+spg <- AQI_class
+coordinates(spg) <- ~ Lon + Lat
+# coerce to SpatialPixelsDataFrame
+gridded(spg) <- TRUE
+# coerce to raster
+r <- raster(spg)
+# add reference system to the raster
+crs(r) = "+proj=longlat +datum=WGS84"
+
 writeRaster(r, paste0(RECREMA_dir_AQI, "AQI_",new_DateTime,".tif") , options= "INTERLEAVE=BAND", overwrite=T)
+
 
 ###################################################################################################################
 ###################################################################################################################

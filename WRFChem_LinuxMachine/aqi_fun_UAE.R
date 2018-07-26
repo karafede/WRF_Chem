@@ -39,7 +39,7 @@ return(AQI_O3)
   
 
 ### CO #####
-# converted into ppb
+# converted into ppm
 
 aqi_CO_fun <- function(dawit){
   

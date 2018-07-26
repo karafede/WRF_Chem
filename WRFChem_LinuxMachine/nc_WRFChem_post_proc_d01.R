@@ -42,7 +42,7 @@ time <- Sys.time()
 year <- year <- str_sub(time, start = 0, end = -16)
 month <- str_sub(time, start = 6, end = -13)
 day <- str_sub(time, start = 9, end = -10) 
-# folder_day <- paste0(year,month, day,"00")    # "2017120400"
+# folder_day <- paste0(year,month, day,"00")    # "2018071500"
 
 
 folder_day <- date
@@ -141,6 +141,7 @@ qq <- 0
 
     r <- crop(r, extent(shp_UAE))
     r <- mask(r, shp_UAE)
+    
 
     ###################
 
@@ -193,7 +194,9 @@ qq <- 0
     raster_layer <- crop(raster_layer, extent(UAE_shape))
     raster_layer<- mask(raster_layer, UAE_shape)
     raster_layer <- raster_layer*1.5
+    raster_layer <- raster_layer*6
 
+    
     writeRaster(raster_layer, paste0(RECREMA_dir_PM10, "PM10_",new_DateTime,".tif") , options= "INTERLEAVE=BAND", overwrite=T)
    }
 
@@ -261,6 +264,7 @@ for(j in 1:length(filenames)) {
   
   r <- crop(r, extent(shp_UAE))
   r <- mask(r, shp_UAE)
+
   
   ###################
   
@@ -313,6 +317,7 @@ for(j in 1:length(filenames)) {
   raster_layer <- crop(raster_layer, extent(UAE_shape))
   raster_layer<- mask(raster_layer, UAE_shape)
   raster_layer <- raster_layer*1.5
+  raster_layer <- raster_layer*6
   
   writeRaster(raster_layer, paste0(RECREMA_dir_PM25, "PM25_",new_DateTime,".tif") , options= "INTERLEAVE=BAND", overwrite=T)
 }
