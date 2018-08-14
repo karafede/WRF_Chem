@@ -1,0 +1,15 @@
+export LD_LIBRARY_PATH=/home/fkaragulian/wrf_libraries_gfort_noquadmath/hdf/h4dir/lib:/home/fkaragulian/wrf_libraries_gfort_noquadmath/hdf/h5dir_1.8.13/lib:/home/fkaragulian/wrf_libraries_gfort_noquadmath/hdf/h5dir/lib:/home/fkaragulian/local/lib:/home/fkaragulian/gfortran/installed_noquadmath/lib64:/home/fkaragulian/wrf_libraries_gfort_noquadmath/local/lib:/home/fkaragulian/wrf_libraries_gfort_noquadmath/bin/mpich-install/lib/:$LD_LIBRARY_PATH
+
+export JASPERLIB=/home/fkaragulian/wrf_libraries_gfort_noquadmath/local/lib
+export JASPERINC=/home/fkaragulian/wrf_libraries_gfort_noquadmath/local/include
+
+export EM_CORE=1
+export WRF_CHEM=1
+export NETCDF=/home/fkaragulian/wrf_libraries_gfort_noquadmath/local
+export WRF_KPP=1
+
+export YACC='/home/fkaragulian/wrf_libraries_gfort_noquadmath/local/bin/yacc -d'
+export PATH=/home/fkaragulian/wrf_libraries_gfort_noquadmath/bin/mpich-install/bin/:/home/fkaragulian/local/ncl_nodap/bin:/home/fkaragulian/wrf_libraries_gfort_noquadmath/local/bin:/home/fkaragulian/gfortran/installed_noquadmath/bin:$PATH:/home/fkaragulian/bin
+
+export FLEX_LIB_DIR=/home/fkaragulian/wrf_libraries_gfort_noquadmath/local/lib
+
